@@ -1,0 +1,51 @@
+SET TOOLTIPS. THEY WILL LOOK AWESOME!!!!!!
+
+How do we keep playlists in the db? AS their own table? Do we have arrays available?
+
+
+
+
+This is code from Library class rebuild for week 3.
+This may be useful for future use when building the GUI
+
+    /**Adds songs to library
+     * Called by user interaction
+     */
+    private void AddSongToLibrary()
+    {
+        File songFile;      //Stores selected file object
+        String filePath;    //Stores selected file's path
+        
+        //Open file dialog
+        JFileChooser fileChooser = new JFileChooser();  //File Chooser object
+        int status = fileChooser.showOpenDialog(null);  //Stores user choice
+        if (status == fileChooser.APPROVE_OPTION)       //If file selected
+        {
+            songFile = fileChooser.getSelectedFile();   //Retrieve File object
+            filePath = songFile.getPath();              //Store File path
+            songList.add(filePath);                     //Add to Library list
+        }
+    }
+    
+    /**Removes song from Library
+     * Requires selection of song(s) in Library list
+     * Receives array of indices from Selection event
+     */
+    private void RemoveSongFromLibrary(int[] songIndices)
+    {
+        int count = 0;                                  //Count removed songs
+        
+        //Enhanced for loop to iterate through array
+        for (int index : songIndices)
+        {
+            songList.remove(index);
+            count++;
+        }
+        
+        //Display # songs removed
+        JOptionPane.showMessageDialog(null, count + " song(s) removed.");
+    }
+
+End Week 3 Notes
+*******************************************************************************
+
