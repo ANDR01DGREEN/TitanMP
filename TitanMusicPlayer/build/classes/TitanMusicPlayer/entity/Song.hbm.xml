@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+  <class name="TitanMusicPlayer.bll.Song" table="SONGS">
+      <id name="songID" type="java.lang.Integer">
+          <column name="SONGID"/>
+          <generator class="identity"/>
+      </id>
+      <property name="title" type="string">
+          <column length="250" name="TITLE"/>
+      </property>
+      <property name="artist" type="string">
+          <column length="250" name="ARTIST"/>
+      </property>
+      <property name="filePath" type="string">
+          <column name="FILEPATH" length="500"/>
+      </property>
+  </class>
+</hibernate-mapping>
