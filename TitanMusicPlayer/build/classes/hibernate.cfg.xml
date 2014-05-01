@@ -9,6 +9,6 @@
     <property name="hibernate.connection.password">password</property>
     <property name="hibernate.show_sql">true</property>
     <property name="hibernate.query.factory_class">org.hibernate.hql.internal.classic.ClassicQueryTranslatorFactory</property>
-    <mapping resource="TitanMusicPlayer/entity/Song.hbm.xml"/>
+    <mapping class="TitanMusicPlayer.bll.Song" file="" jar="" package="" resource="TitanMusicPlayer/entity/Song.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>

@@ -39,7 +39,12 @@ public class Song implements Serializable {
     private String legnth;      //Song Length
      */
     
-    public Song() {
+    //No-arg contructor for hibernate
+    private Song() {
+        this.artist = "emptyArtist";
+        this.title = "emptyTitle";
+        this.filePath = "emptyPath";
+        this.songID = -1;
     }
 
     public int getSongID() {
