@@ -6,21 +6,18 @@
 
 package TitanMusicPlayerGUI;
 
+import TitanMusicPlayer.bll.Account;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author AJ Green <ajgreenmail@gmail.com>
  */
-public class CreateUser extends javax.swing.JFrame {
+public class CreateAccount extends javax.swing.JFrame {
 
-    /**
-     * Creates new form CreateUser
-     */
-    public CreateUser() {
-        initComponents();
-    }
+    public Account account = null;
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -189,6 +186,7 @@ public class CreateUser extends javax.swing.JFrame {
         final String PASSWORD_INVALID1 = "Password must contain one letter,";
         final String PASSWORD_INVALID2 = "one number, and one special character.";
         
+        
         //Force error messages invisible for multiple tries
         usernameError.setVisible(false);
         emailError.setVisible(false);
@@ -232,10 +230,23 @@ public class CreateUser extends javax.swing.JFrame {
                 passwordError1.setVisible(true);
                 passwordError2.setVisible(true);
                 errorFound = true;
-            }
+            }      
         }
         
-        //Code to pass user info on to db goes here. 
+        if(errorFound==false){
+            //Store user info in account
+            account.setEmail(emailField.getText());
+            account.setPassword(passwordField.getText());
+            account.setUsername(usernameField.getText());
+
+            //Pass to db to store user
+            createUserInDB(account);
+            
+            JOptionPane.showMessageDialog(null, "Logged in as " + account.getUsername());
+            //Close dialog
+            this.dispose();
+        }
+        
     }//GEN-LAST:event_createButtonActionPerformed
 
     private boolean isEmailValid(String e){
@@ -261,41 +272,19 @@ public class CreateUser extends javax.swing.JFrame {
         return letterMat.find()&&numberMat.find()&&specialMat.find();
     }
     
-    
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CreateUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CreateUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CreateUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CreateUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new CreateUser().setVisible(true);
-            }
-        });
+    //Creates user in the db for later login
+    private void createUserInDB(Account a) {
+        //Will be used to send user info to DB once DB is configured
+        //Message Pane to show info now
+        JOptionPane.showMessageDialog(null, "Username :" + a.getUsername() +
+                "\nEmail: "+ a.getEmail() + "\nPassword: " + a.getPassword());
     }
+    
+    //Constructor with passed account
+    public CreateAccount(Account a){
+            account = a;
+            initComponents();
+        }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;

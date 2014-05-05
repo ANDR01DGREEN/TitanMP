@@ -124,31 +124,31 @@ public class Library {
     }
     
     private void executeHQLSave(Song s) {
-        try {
-            Session session = HibernateUtil.getSessionFactory().openSession();
-            session.beginTransaction();
-            session.save(s);
-            session.getTransaction().commit();
-        } catch(HibernateException he) {
-            he.printStackTrace();
-        }
+//        try {
+//            Session session = HibernateUtil.getSessionFactory().openSession();
+//            session.beginTransaction();
+//            session.save(s);
+//            session.getTransaction().commit();
+//        } catch(HibernateException he) {
+//            he.printStackTrace();
+//        }
     }
     
     public void loadDBLibrary() {
-        try {
-            Session session = HibernateUtil.getSessionFactory().openSession();
-            session.beginTransaction();
-            Query q = session.createQuery("from songs");
-            //get result list and move into library
-            List<Song> songs = q.list();
-            for(Song s: songs){
-                this.songList.add(s);
-            }
-            session.getTransaction().commit();
-            
-        
-        } catch (HibernateException he) {
-            he.printStackTrace();
-        }
+//        try {
+//            Session session = HibernateUtil.getSessionFactory().openSession();
+//            session.beginTransaction();
+//            Query q = session.createQuery("from songs");
+//            //get result list and move into library
+//            List<Song> songs = q.list();
+//            for(Song s: songs){
+//                this.songList.add(s);
+//            }
+//            session.getTransaction().commit();
+//            
+//        
+//        } catch (HibernateException he) {
+//            he.printStackTrace();
+//        }
     }
 }

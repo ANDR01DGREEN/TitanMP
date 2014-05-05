@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.farng.mp3.MP3File;
 import org.farng.mp3.TagException;
@@ -27,9 +28,20 @@ import org.farng.mp3.TagException;
 public class Player extends javax.swing.JFrame {
     Library playerLibrary = new Library();
     Playlist currentList = new Playlist();
+    public Account account = new Account();
+    private String currentAccount = account.getUsername();
+    MP3Player myPlayer = null;
+    
+    
     public static String musicPath = System.getProperty("user.home") + 
             "\\Music";
     public static String[] defaultList = {"<No items yet>"};
+    
+    //Song-status values
+    private final int SONG_PLAYING = 10;
+    private final int SONG_STOPPED = 20;
+    private final int SONG_PAUSED = 30;
+    private int songStatus = SONG_STOPPED;
 
     /**
      * Creates new form Library
@@ -97,9 +109,12 @@ public class Player extends javax.swing.JFrame {
         newSongMenuItem = new javax.swing.JMenuItem();
         newPlaylistMenuItem = new javax.swing.JMenuItem();
         exitMenuItem = new javax.swing.JMenuItem();
+        userMenu = new javax.swing.JMenu();
+        createUserMenuItem = new javax.swing.JMenuItem();
+        loginMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Titan Music PLayer");
+        setTitle("Titan Music Player");
 
         titleLabel.setText("Title");
 
@@ -232,12 +247,27 @@ public class Player extends javax.swing.JFrame {
         });
 
         stopButton.setText("Stop");
+        stopButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                stopButtonActionPerformed(evt);
+            }
+        });
 
         pauseButton.setText("Pause | |");
+        pauseButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pauseButtonActionPerformed(evt);
+            }
+        });
 
         prevButton.setText("<< Prev");
 
         playButton.setText("Play >");
+        playButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                playButtonActionPerformed(evt);
+            }
+        });
 
         nextButton.setText("Next >>");
         nextButton.addActionListener(new java.awt.event.ActionListener() {
@@ -291,6 +321,26 @@ public class Player extends javax.swing.JFrame {
         fileMenu.add(exitMenuItem);
 
         menuBar.add(fileMenu);
+
+        userMenu.setText("User");
+
+        createUserMenuItem.setText("Create User");
+        createUserMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                createUserMenuItemActionPerformed(evt);
+            }
+        });
+        userMenu.add(createUserMenuItem);
+
+        loginMenuItem.setText("Login");
+        loginMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loginMenuItemActionPerformed(evt);
+            }
+        });
+        userMenu.add(loginMenuItem);
+
+        menuBar.add(userMenu);
 
         setJMenuBar(menuBar);
 
@@ -351,7 +401,7 @@ public class Player extends javax.swing.JFrame {
                                     .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(playlistsLabel)))
                             .addComponent(PLControlLabel))
-                        .addContainerGap())))
+                        .addGap(15, 15, 15))))
             .addGroup(layout.createSequentialGroup()
                 .addGap(78, 78, 78)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -434,7 +484,7 @@ public class Player extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(songInfoField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(timeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addContainerGap(74, Short.MAX_VALUE))
         );
 
         pack();
@@ -447,7 +497,10 @@ public class Player extends javax.swing.JFrame {
         playerLibrary.loadDBLibrary();
     }
     
-    
+    //Gets selected song from titlesList
+    public Song getSelectedSong(){
+        return playerLibrary.getSongByIndex(titlesList.getSelectedIndex());
+    }
     
     /*
     Generic method to repopulate Title and Artist lists at start or during
@@ -612,7 +665,7 @@ public class Player extends javax.swing.JFrame {
     }//GEN-LAST:event_artistListValueChanged
 
     private void playSongButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playSongButtonActionPerformed
-        //Code to instantiate player. Probably week 6?
+        playSong();
     }//GEN-LAST:event_playSongButtonActionPerformed
 
     private void playPLButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playPLButtonActionPerformed
@@ -664,6 +717,65 @@ public class Player extends javax.swing.JFrame {
         ///and search in songs db. Also, will need to search conjoined db once
         ///implemented.
     }//GEN-LAST:event_remSongPLButtonActionPerformed
+
+    private void createUserMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createUserMenuItemActionPerformed
+        //Run create account form
+        new CreateAccount(account).setVisible(true);
+        //Cannot stop code from execution to update user?
+    }//GEN-LAST:event_createUserMenuItemActionPerformed
+
+    private void loginMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginMenuItemActionPerformed
+        //Run Login form
+        new AccountLogin(account).setVisible(true);
+    }//GEN-LAST:event_loginMenuItemActionPerformed
+
+    private void playButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playButtonActionPerformed
+        playSong();
+    }//GEN-LAST:event_playButtonActionPerformed
+
+    private void pauseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pauseButtonActionPerformed
+        pauseSong();
+    }//GEN-LAST:event_pauseButtonActionPerformed
+
+    private void stopButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopButtonActionPerformed
+        stopSong();
+    }//GEN-LAST:event_stopButtonActionPerformed
+
+    //Want to use this to update user, but will not work?
+    private void updateAccount(){
+        this.setTitle("Titan Music Player - Logged in as " + account.getUsername());
+        JOptionPane.showMessageDialog(null, account.getUsername());
+    }
+    
+    //Multi-use playSong method
+    private void playSong(){
+        if(songStatus == SONG_STOPPED){
+            myPlayer = new MP3Player(playerLibrary.getSongByIndex(
+                titlesList.getSelectedIndex()));
+            new Thread(myPlayer).start();
+            songStatus = SONG_PLAYING;
+        }
+        else if(songStatus == SONG_PAUSED){
+           myPlayer.resumePlay();
+           songStatus = SONG_PLAYING;
+        }
+    }
+    
+    //Multi-use pauseSong method
+    private void pauseSong(){
+        if(songStatus == SONG_PLAYING){
+            myPlayer.pause();
+            songStatus = SONG_PAUSED;
+        }
+    }
+    
+    //Multi-use stopSong method
+    private void stopSong(){
+        if(songStatus == SONG_PLAYING || songStatus == SONG_PAUSED){
+            myPlayer.stopPlay();
+            songStatus = SONG_STOPPED;
+        }
+    }
     
     /**
     //Compares and selects library lists to keep selections the same
@@ -721,6 +833,7 @@ public class Player extends javax.swing.JFrame {
     private javax.swing.JLabel artistLabel;
     private javax.swing.JList artistList;
     private javax.swing.JRadioButton artistRadioButton;
+    private javax.swing.JMenuItem createUserMenuItem;
     private javax.swing.JLabel currentPLLable;
     private javax.swing.JList currentPLList;
     private javax.swing.JButton delPLButton;
@@ -735,6 +848,7 @@ public class Player extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JLabel libControlLabel;
+    private javax.swing.JMenuItem loginMenuItem;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenu newMenu;
     private javax.swing.JButton newPLButton;
@@ -757,5 +871,6 @@ public class Player extends javax.swing.JFrame {
     private javax.swing.JLabel titleLabel;
     private javax.swing.JRadioButton titleRadioButton;
     private javax.swing.JList titlesList;
+    private javax.swing.JMenu userMenu;
     // End of variables declaration//GEN-END:variables
 }
