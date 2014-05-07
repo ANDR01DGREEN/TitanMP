@@ -7,7 +7,8 @@
 package TitanMusicPlayer.bll;
 
 //Import packages
-import TitanMusicPlayer.util.HibernateUtil;
+import TitanMusicPlayer.da.HibernateUtil;
+import TitanMusicPlayer.da.SongRepository;
 import java.util.ArrayList; //Accesses ArrayList 
 import java.util.Collections;
 import java.util.List;
@@ -23,21 +24,24 @@ public class Library {
     //Private Array List for Library Songs
     private ArrayList<Song> songList;
     
+    //Create repositories
+    SongRepository songRepo = new SongRepository();
+    
     /*
     Constructor for Library Object
     */
     public Library(){
-        this.songList = new ArrayList<>();
+        this.songList = new ArrayList<Song>(songRepo.getSongsList());
     }
     
     /*
     Add song to Library songList
     */
     public void addToLibrary(Song s){
+        //Add to internal list
         this.songList.add(s);
-        
-        executeHQLSave(s);
-        
+        //Add to DB
+        //songRepo.addSong(s);
     }
     
     /*
@@ -45,7 +49,11 @@ public class Library {
     */
     public void removeFromLibrary(int i)
     {
+        Song s = songList.get(i);
+        //Remove from internal
         this.songList.remove(i);
+        //Remove from DB
+        //songRepo.removeSong(s);
     }
     
     /*
@@ -53,6 +61,7 @@ public class Library {
     */
     public void removeFromLibrary(Song s){
         this.songList.remove(s);
+        //songRepo.removeSong(s);
     }
     
     /*
@@ -121,34 +130,5 @@ public class Library {
     public Song getSongByIndex(int i)
     {
         return songList.get(i);
-    }
-    
-    private void executeHQLSave(Song s) {
-//        try {
-//            Session session = HibernateUtil.getSessionFactory().openSession();
-//            session.beginTransaction();
-//            session.save(s);
-//            session.getTransaction().commit();
-//        } catch(HibernateException he) {
-//            he.printStackTrace();
-//        }
-    }
-    
-    public void loadDBLibrary() {
-//        try {
-//            Session session = HibernateUtil.getSessionFactory().openSession();
-//            session.beginTransaction();
-//            Query q = session.createQuery("from songs");
-//            //get result list and move into library
-//            List<Song> songs = q.list();
-//            for(Song s: songs){
-//                this.songList.add(s);
-//            }
-//            session.getTransaction().commit();
-//            
-//        
-//        } catch (HibernateException he) {
-//            he.printStackTrace();
-//        }
     }
 }

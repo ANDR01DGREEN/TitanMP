@@ -494,7 +494,7 @@ public class Player extends javax.swing.JFrame {
     firstRun loads data from the library and other basic startup fucntions
     */
     public void firstRun() {
-        playerLibrary.loadDBLibrary();
+        playerLibrary.getLibrary();
     }
     
     //Gets selected song from titlesList
@@ -750,10 +750,11 @@ public class Player extends javax.swing.JFrame {
     //Multi-use playSong method
     private void playSong(){
         if(songStatus == SONG_STOPPED){
-            myPlayer = new MP3Player(playerLibrary.getSongByIndex(
-                titlesList.getSelectedIndex()));
+            Song selectedSong = playerLibrary.getSongByIndex(titlesList.getSelectedIndex());
+            myPlayer = new MP3Player(selectedSong);
             new Thread(myPlayer).start();
             songStatus = SONG_PLAYING;
+            songInfoField.setText(selectedSong.getTitle() + " - " + selectedSong.getArtist());
         }
         else if(songStatus == SONG_PAUSED){
            myPlayer.resumePlay();

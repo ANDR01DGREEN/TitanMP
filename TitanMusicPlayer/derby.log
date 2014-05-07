@@ -1,7 +1,7 @@
-Tue Apr 29 20:34:04 EDT 2014 : Apache Derby Network Server - 10.10.1.3 - (1557168) started and ready to accept connections on port 1527
+Tue May 06 20:04:44 EDT 2014 : Apache Derby Network Server - 10.10.1.3 - (1557168) started and ready to accept connections on port 1527
 ----------------------------------------------------------------
-Tue Apr 29 20:34:41 EDT 2014:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.1.3 - (1557168): instance a816c00e-0145-b00d-76dc-ffffcd87a2ce 
+Tue May 06 20:04:45 EDT 2014:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.1.3 - (1557168): instance a816c00e-0145-d3ff-1e61-ffffcd87a2ce 
 on database directory C:\Users\Jaki\Documents\GitHub\TitanMP\TitanMusicPlayer\titanMP with class loader sun.misc.Launcher$AppClassLoader@144bcfa 
 Loaded from file:/C:/Java/jdk1.8.0_05/db/lib/derby.jar
 java.vendor=Oracle Corporation

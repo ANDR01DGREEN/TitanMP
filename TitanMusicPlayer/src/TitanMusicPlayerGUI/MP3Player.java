@@ -26,14 +26,17 @@ public class MP3Player implements Runnable{
     }
     
     public synchronized void pause(){
-        try {
-            while(playing){
-                mp3Player.wait();
-                playing = false;
-            }
-        } catch (InterruptedException e) {
-        }
-            
+//        try {
+//            while(playing){
+//                //mp3Player.wait();
+//                playing = false;
+//                notifyAll();
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//            
+        JOptionPane.showMessageDialog(null, "Pause still hanging - Disabled.");
     }
     
     public synchronized void resumePlay(){
